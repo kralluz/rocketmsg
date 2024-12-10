@@ -1,0 +1,86 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Contact {
+  id        Int            @id @default(autoincrement())
+  name      String
+  tags      String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  deletedAt DateTime?
+  phones    ContactPhone[]
+  emails    ContactEmail[]
+  messages  Message[]
+}
+
+model ContactPhone {
+  id        Int       @id @default(autoincrement())
+  phone     String    
+  type      String?
+  contactId Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  contact   Contact   @relation(fields: [contactId], references: [id])
+  Message   Message[]
+}
+
+model ContactEmail {
+  id        Int       @id @default(autoincrement())
+  email     String    
+  type      String?
+  contactId Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  contact   Contact   @relation(fields: [contactId], references: [id])
+  Message   Message[]
+}
+
+model Template {
+  id           Int        @id @default(autoincrement())
+  name         String
+  body         String
+  placeholders String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deletedAt    DateTime?
+  campaigns    Campaign[]
+}
+
+model Campaign {
+  id          Int       @id @default(autoincrement())
+  name        String
+  templateId  Int
+  scheduledAt DateTime?
+  status      String    @default("draft")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  template    Template  @relation(fields: [templateId], references: [id])
+  messages    Message[]
+}
+
+model Message {
+  id         Int           @id @default(autoincrement())
+  campaignId Int
+  contactId  Int
+  phoneId    Int?
+  emailId    Int?
+  status     String        @default("pending")
+  sentAt     DateTime?
+  failReason String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  deletedAt  DateTime?
+  campaign   Campaign      @relation(fields: [campaignId], references: [id])
+  contact    Contact       @relation(fields: [contactId], references: [id])
+  phone      ContactPhone? @relation(fields: [phoneId], references: [id])
+  email      ContactEmail? @relation(fields: [emailId], references: [id])
+}
