@@ -15,7 +15,7 @@ import {
   MenuItemGroup,
   MenuItemText,
 } from "@chakra-ui/react";
-import { useColorModeValue } from "./ui/color-mode";
+import { useColorModeValue } from "./color-mode";
 
 interface Props {
   children: React.ReactNode;

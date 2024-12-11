@@ -1,7 +1,7 @@
 import "./globals.css";
 import { ReactNode } from "react";
 import ToastProvider from "@/context/ToastProvider";
-import { Provider } from "@/components/ui/provider";
+import { Provider } from "@/components/provider";
 
 export const metadata = {
   title: "Rocket Msg",
