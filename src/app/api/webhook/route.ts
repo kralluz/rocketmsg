@@ -24,7 +24,7 @@ export async function POST(req: Request) {
         },
         {
           headers: {
-            Authorization: `Bearer YOUR_GRAPH_API_TOKEN`, // Substitua pelo token correto
+            Authorization: `Bearer EAAOGeUZAUHUMBO6Ugsk7rBZBZCfeVBP2b56pv1kCN7LmslAOBwyeLfrrAapgZBIZABHK0RGOyN9ZBg4TzpC1j5grlRXS6Te1dcinIMO2jN0A5ukCUwWinryYQZBbaZAPZCdIZCHJiRCA2yEUtytZCos9gnKONu3wyJDNG4VK86AJXe1eO8WsT7cxMJUU1KqPPcGDi3o8Osyx0PhHZAZB4X9QZCdZAQAdTYWMHNz`, // Substitua pelo token correto
           },
         }
       );
@@ -39,16 +39,22 @@ export async function POST(req: Request) {
         },
         {
           headers: {
-            Authorization: `Bearer YOUR_GRAPH_API_TOKEN`, // Substitua pelo token correto
+            Authorization: `Bearer EAAOGeUZAUHUMBO6Ugsk7rBZBZCfeVBP2b56pv1kCN7LmslAOBwyeLfrrAapgZBIZABHK0RGOyN9ZBg4TzpC1j5grlRXS6Te1dcinIMO2jN0A5ukCUwWinryYQZBbaZAPZCdIZCHJiRCA2yEUtytZCos9gnKONu3wyJDNG4VK86AJXe1eO8WsT7cxMJUU1KqPPcGDi3o8Osyx0PhHZAZB4X9QZCdZAQAdTYWMHNz`, // Substitua pelo token correto
           },
         }
       );
     }
 
-    return NextResponse.json({ message: "Message processed successfully" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Message processed successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error processing webhook message:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
