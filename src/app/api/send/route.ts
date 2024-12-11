@@ -35,11 +35,3 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
-
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "POST") {
-    return POST(req, res);
-  } else {
-    return res.status(405).json({ error: "Method Not Allowed" });
-  }
-}
