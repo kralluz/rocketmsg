@@ -9,7 +9,7 @@ import { CSSProperties } from "react";
 const sendContact = async (contact: any, index: number) => {
 
   try {
-    const response = await fetch("http://localhost:3000/api/contacts", {
+    const response = await fetch("/api/contacts", {
       method: "POST",
       body: JSON.stringify(contact),
       headers: {
