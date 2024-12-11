@@ -1,14 +1,13 @@
 import axios from "axios";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
   try {
-    const { phoneNumber, messageText } = req.body;
+    const body = await req.json();
+    const { phoneNumber, messageText } = body;
 
     if (!phoneNumber || !messageText) {
-      return res
-        .status(400)
-        .json({ error: "Phone number and message text are required" });
+      return NextResponse.json({ error: "Phone number and message text are required" }, { status: 400 });
     }
 
     const businessPhoneNumberId = "YOUR_BUSINESS_PHONE_NUMBER_ID"; // Substitua pelo ID correto
@@ -29,9 +28,13 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       }
     );
 
-    return res.status(200).json({ message: "Message sent successfully" });
+    return NextResponse.json({ message: "Message sent successfully" }, { status: 200 });
   } catch (error) {
     console.error("Error sending message:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
+}
+
+export async function GET() {
+  return NextResponse.json({ message: "This route only supports POST requests" }, { status: 405 });
 }
