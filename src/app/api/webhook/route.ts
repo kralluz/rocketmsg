@@ -1,15 +1,19 @@
+import { NextResponse } from "next/server";
 import axios from "axios";
-import { NextApiRequest, NextApiResponse } from "next";
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+// POST Handler
+export async function POST(req: Request) {
   try {
-    console.log("Incoming webhook message:", JSON.stringify(req.body, null, 2));
-    const message = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+    const body = await req.json();
+
+    console.log("Incoming webhook message:", JSON.stringify(body, null, 2));
+    const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
     if (message?.type === "text") {
       const businessPhoneNumberId =
-        req.body.entry?.[0]?.changes?.[0]?.value?.metadata?.phone_number_id;
+        body.entry?.[0]?.changes?.[0]?.value?.metadata?.phone_number_id;
 
+      // Enviar mensagem de resposta
       await axios.post(
         `https://graph.facebook.com/v18.0/${businessPhoneNumberId}/messages`,
         {
@@ -25,7 +29,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
         }
       );
 
-      // Marcar a mensagem recebida como lida
+      // Marcar a mensagem como lida
       await axios.post(
         `https://graph.facebook.com/v18.0/${businessPhoneNumberId}/messages`,
         {
@@ -41,24 +45,25 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       );
     }
 
-    return res.status(200).send("Message processed successfully");
+    return NextResponse.json({ message: "Message processed successfully" }, { status: 200 });
   } catch (error) {
     console.error("Error processing webhook message:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const mode = req.query["hub.mode"] as string;
-  const token = req.query["hub.verify_token"] as string;
-  const challenge = req.query["hub.challenge"] as string;
+// GET Handler
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const mode = searchParams.get("hub.mode");
+  const token = searchParams.get("hub.verify_token");
+  const challenge = searchParams.get("hub.challenge");
 
   // Validar a solicitação de verificação do webhook
   if (mode === "subscribe" && token === "klz") {
     console.log("Webhook verified successfully!");
-    return res.status(200).send(challenge);
+    return new Response(challenge, { status: 200 });
   } else {
-    return res.status(403).send("Forbidden");
+    return new Response("Forbidden", { status: 403 });
   }
 }
-
