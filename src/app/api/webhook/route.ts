@@ -62,13 +62,3 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-// Método não permitido
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "POST") {
-    return POST(req, res);
-  } else if (req.method === "GET") {
-    return GET(req, res);
-  } else {
-    return res.status(405).json({ error: "Method Not Allowed" });
-  }
-}
