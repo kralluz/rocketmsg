@@ -186,7 +186,7 @@ function HomePage() {
                       >
                         <td style={styles.td}>{index + 1}</td>
                         <td style={styles.td}>{row.name}</td>
-                        <td style={styles.td}>{row.telephone}</td>
+                        <td style={styles.td}>{row.phone}</td>
                         <td style={styles.td}>{row.email}</td>
                       </tr>
                     );
