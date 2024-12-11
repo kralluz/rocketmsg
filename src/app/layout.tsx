@@ -2,6 +2,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 import ToastProvider from "@/context/ToastProvider";
 import { Provider } from "@/components/provider";
+import { AuthProvider } from "@/context/AuthContextData";
 
 export const metadata = {
   title: "Rocket Msg",
@@ -9,13 +10,13 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR">
       <body>
-        <Provider>
+        <AuthProvider>
           <ToastProvider>
-            <main style={{ padding: "1rem" }}>{children}</main>
+            <main>{children}</main>
           </ToastProvider>
-        </Provider>
+        </AuthProvider>
       </body>
     </html>
   );

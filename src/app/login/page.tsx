@@ -1,51 +1,62 @@
+// components/Login/Login.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input } from "@chakra-ui/react";
+import { AuthContext } from "@/context/AuthContextData";
+import { useToast } from "@/components/Toast/useToast";
+import "./Login.css";
+import Input from "@/components/Input/Input";
+import PasswordInput from "@/components/PasswordInput/PasswordInput";
 
-export default function Login() {
+const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { login } = useContext(AuthContext);
+  const toast = useToast();
 
-  const handleLogin = (e: any) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Lógica de autenticação simples
-    if (username === "adm" && password === "adm") {
-      sessionStorage.setItem("isLoggedIn", "true");
+    try {
+      await login(username, password);
+      toast.addToast("success", "Login realizado com sucesso!");
       router.push("/");
-    } else {
-      alert("Credenciais inválidas!");
+    } catch (error: any) {
+      const errorMessage = error.message || "Tente novamente.";
+      toast.addToast("error", errorMessage);
     }
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "0 auto" }}>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>Usuário:</label>
+    <div className="login-container">
+      <div className="login-box">
+        <h2 className="login-heading">Login</h2>
+        <form onSubmit={handleLogin} className="login-form">
           <Input
+            id="username"
+            label="Usuário"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            placeholder="Digite seu usuário"
             required
           />
-        </div>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>Senha:</label>
-          <Input
-            type="password"
+          <PasswordInput
+            id="password"
+            label="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Digite sua senha"
             required
           />
-        </div>
-        <Button type="submit" colorScheme="blue">
-          Entrar
-        </Button>
-      </form>
+          <button type="submit" className="submit-button">
+            Entrar
+          </button>
+        </form>
+      </div>
     </div>
   );
-}
+};
+
+export default Login;
