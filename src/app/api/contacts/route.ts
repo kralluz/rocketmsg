@@ -26,10 +26,10 @@ export async function GET() {
   try {
     const contacts = await getAllContacts();
     return NextResponse.json(contacts);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao buscar contatos:", error);
     return NextResponse.json(
-      { error: "Erro ao buscar contatos" },
+      { error: error.message || "Erro ao buscar contatos" },
       { status: 500 }
     );
   }

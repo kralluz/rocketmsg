@@ -34,17 +34,26 @@ export async function createContact(
 }
 
 export async function getAllContacts() {
-  return prisma.contact.findMany({
-    where: { deletedAt: null },
-    include: {
-      phones: {
-        where: { deletedAt: null },
+  try {
+    const contacts = await prisma.contact.findMany({
+      include: {
+        phones: true,
+        emails: true,
       },
-      emails: {
-        where: { deletedAt: null },
-      },
-    },
-  });
+    });
+    if (!contacts || contacts.length === 0) {
+      throw new Error("Nenhum contato encontrado.");
+    }
+    return contacts;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Erro ao buscar contatos:", error.message);
+      throw new Error(`Erro ao buscar contatos: ${error.message}`);
+    } else {
+      console.error("Erro desconhecido ao buscar contatos:", error);
+      throw new Error("Erro desconhecido ao buscar contatos.");
+    }
+  }
 }
 
 export async function getContactById(contactId: number) {
